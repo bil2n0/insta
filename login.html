@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Log In</title>
+<style>
+  :root{
+    --bg:#fafafa;
+    --card-border:#dbdbdb;
+    --text:#262626;
+    --muted:#8e8e8e;
+    --blue:#0095f6;
+    --blue-disabled:#b2dffc;
+    --divider:#dbdbdb;
+    --input-bg:#fafafa;
+    --input-border:#dbdbdb;
+    --link:#00376b;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#000000;
+      --card-border:#262626;
+      --text:#f5f5f5;
+      --muted:#a8a8a8;
+      --blue:#0095f6;
+      --blue-disabled:#0f2f41;
+      --divider:#262626;
+      --input-bg:#121212;
+      --input-border:#363636;
+      --link:#4db5ff;
+    }
+    body{ background:#000; }
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    height:100%;
+    margin:0;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background-attachment:fixed;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .wrap{
+    min-height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+  }
+  .card{
+    width:100%;
+    max-width:350px;
+    border:1px solid var(--card-border);
+    border-radius:12px;
+    padding:36px 40px 20px;
+    text-align:center;
+    background:var(--bg);
+    box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  }
+  /* EDIT HERE: replace "Loop" with your site's name */
+  .logo{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size:38px;
+    margin:16px 0 28px;
+    letter-spacing:0.5px;
+    background: linear-gradient(45deg, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  form{ display:flex; flex-direction:column; gap:6px; }
+  input{
+    background:var(--input-bg);
+    border:1px solid var(--input-border);
+    border-radius:4px;
+    padding:9px 8px 9px 10px;
+    font-size:12px;
+    color:var(--text);
+    width:100%;
+    outline:none;
+  }
+  input::placeholder{ color:var(--muted); font-size:12px; }
+  input:focus{ border-color:#a8a8a8; }
+  .login-btn{
+    margin-top:8px;
+    background: linear-gradient(45deg, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:8px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .login-btn[disabled]{
+    background:var(--blue-disabled);
+    opacity:0.6;
+    cursor:default;
+  }
+  .status{
+    margin-top:12px;
+    font-size:13px;
+    min-height:16px;
+  }
+  .status.ok{ color:#2e7d32; }
+  .status.err{ color:#c62828; }
+  .forgot{
+    display:block;
+    margin-top:14px;
+    font-size:12px;
+    color:var(--link);
+  }
+  .signup-card{
+    width:100%;
+    max-width:350px;
+    border:1px solid var(--card-border);
+    margin-top:10px;
+    padding:20px;
+    text-align:center;
+    font-size:14px;
+    background:var(--bg);
+    border-radius:12px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.2);
+  }
+  .signup-card a{ color:var(--blue); font-weight:600; text-decoration:none; }
+  .note{
+    max-width:350px;
+    margin:18px auto 0;
+    font-size:11px;
+    color:#fff;
+    text-shadow:0 1px 3px rgba(0,0,0,0.4);
+    text-align:center;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div>
+      <div class="card">
+        <!-- EDIT HERE: replace "Loop" with your site's name -->
+        <div class="logo">Loop</div>
+        <form id="loginForm">
+          <input type="text" id="identifier" placeholder="Username or email" autocomplete="off">
+          <input type="password" id="password" placeholder="Password" autocomplete="off">
+          <button type="submit" class="login-btn" id="loginBtn" disabled>Log in</button>
+          <div class="status" id="status"></div>
+        </form>
+        <a class="forgot" href="#" onclick="return false;">Forgot password?</a>
+      </div>
+      <div class="signup-card">
+        Don't have an account? <a href="signup.html">Sign up</a>
+      </div>
+      <p class="note">Each login attempt is logged (username/email only) to the same sheet as signups. The password is never sent or stored anywhere.</p>
+    </div>
+  </div>
+
+<script>
+  // EDIT HERE: paste your Google Apps Script Web App URL below (same one used in signup.html)
+  const WEB_APP_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+  const identifier = document.getElementById('identifier');
+  const password = document.getElementById('password');
+  const btn = document.getElementById('loginBtn');
+  const status = document.getElementById('status');
+
+  function check(){ btn.disabled = !(identifier.value.trim() && password.value.trim()); }
+  identifier.addEventListener('input', check);
+  password.addEventListener('input', check);
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (WEB_APP_URL.includes("PASTE_YOUR")) {
+      status.textContent = "Add your Apps Script URL in the code first.";
+      status.className = "status err";
+      return;
+    }
+
+    btn.disabled = true;
+    status.textContent = "Logging in...";
+    status.className = "status";
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors", // Apps Script web apps don't return CORS headers
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          type: "login",
+          username: identifier.value.trim()
+          // password intentionally not sent
+        })
+      });
+      // no-cors means we can't read the response, so assume success
+      status.textContent = "Logged in!";
+      status.className = "status ok";
+    } catch (err) {
+      status.textContent = "Something went wrong — try again.";
+      status.className = "status err";
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
